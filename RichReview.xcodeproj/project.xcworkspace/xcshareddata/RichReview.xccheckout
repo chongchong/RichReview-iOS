@@ -10,14 +10,14 @@
 	<string>RichReview</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>0D1ECA567AE96506C58AF664E364A2197E40F0C6</key>
+		<key>9FDA6305E8671C8B9E67E002AF4F9C49F93AC598</key>
 		<string>github.com:chongchong/RichReview-iOS.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>RichReview.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>0D1ECA567AE96506C58AF664E364A2197E40F0C6</key>
+		<key>9FDA6305E8671C8B9E67E002AF4F9C49F93AC598</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>0D1ECA567AE96506C58AF664E364A2197E40F0C6</string>
+	<string>9FDA6305E8671C8B9E67E002AF4F9C49F93AC598</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>0D1ECA567AE96506C58AF664E364A2197E40F0C6</string>
+			<string>9FDA6305E8671C8B9E67E002AF4F9C49F93AC598</string>
 			<key>IDESourceControlWCCName</key>
 			<string>RichReview</string>
 		</dict>
