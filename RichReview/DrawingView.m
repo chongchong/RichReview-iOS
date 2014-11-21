@@ -20,7 +20,9 @@
     
     
     NSMutableArray *mPathArray;
+    NSMutableArray *mLayerArray;
     UIBezierPath  *mPath;
+    CGMutablePathRef mMutablePath;
     
     CGPoint lastTouch;
 }
@@ -50,6 +52,8 @@
         self.backgroundColor = [UIColor clearColor];
         
         mPathArray = [[NSMutableArray alloc]init];
+        
+        mLayerArray = [[NSMutableArray alloc] init];
     }
     return self;
     
@@ -67,6 +71,8 @@
         self.backgroundColor = DEFAULT_BACKGROUND_COLOR;
         
         mPathArray = [[NSMutableArray alloc]init];
+        
+        mLayerArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -89,7 +95,13 @@
 
 - (void) erase
 {
-    
+    for (CAShapeLayer *stroke in mLayerArray)
+    {
+        if (stroke){
+            [stroke removeFromSuperlayer];
+        }
+    }
+    [mLayerArray removeAllObjects];
 }
 
 - (void) drawRect:(CGRect)rect{
@@ -99,26 +111,29 @@
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (mPath == nil){
-        NSLog(@"mPaht is nil");
-        [self createNewPath];
-    }
-    
-    NSLog(@"Touch Began");
     self.currentPoint = self.previousPoint = self.previousPreviousPoint = DUMMY_CGPOINT;
     [[TouchManager GetTouchManager] addTouches:touches knownTouches:[event touchesForView:self] view:self];
+    NSLog(@"Touch Began");
     @try
     {
-        NSArray *theTrackedTouches = [[TouchManager GetTouchManager] getTrackedTouches];
-        //if ([theTrackedTouches count]==0) [self touchesCancelled:touches withEvent:event];
-        for(TrackedTouch *touch in theTrackedTouches)
-        {
-                self.currentPoint = touch.currentLocation;
-                NSLog(@"Touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
-                self.previousPoint = touch.previousLocation;
-                self.previousPreviousPoint = touch.previousLocation;
-            
-        }
+        //        NSArray *theTrackedTouches = [[TouchManager GetTouchManager] getTouches];
+        //        if ([theTrackedTouches count]==0)
+        //        {
+        UITouch *touch = [touches anyObject];
+        self.currentPoint = [touch locationInView:self];
+        NSLog(@"Dummy touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+        self.previousPoint = [touch previousLocationInView:self];
+        self.previousPreviousPoint = self.previousPoint;
+        //        }
+        //        else
+        //            for(TrackedTouch *touch in theTrackedTouches)
+        //            {
+        //                self.currentPoint = touch.currentLocation;
+        //                NSLog(@"Touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+        //                self.previousPoint = touch.previousLocation;
+        //                self.previousPreviousPoint = touch.previousLocation;
+        //            }
+        // [self touchesMoved:touches withEvent:event];
     }
     @catch (NSException *exception)
     {
@@ -129,6 +144,13 @@
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (mPath == nil){
+        NSLog(@"mPaht is nil");
+        [self createNewPath];
+    }
+    if (mMutablePath == nil){
+        mMutablePath = CGPathCreateMutable();
+    }
     @try
     {
         CGPoint current, previous;
@@ -146,12 +168,12 @@
                 //previous.y = self.bounds.size.height - touch.previousLocation.y;
                 
                 //if (CGPointEqualToPoint(self.previousPoint, DUMMY_CGPOINT)) self.previousPreviousPoint = previous;
-               // else
-                    self.previousPreviousPoint = self.previousPoint;
+                //else
+                self.previousPreviousPoint = self.previousPoint;
                 self.previousPoint = previous;
                 self.currentPoint = current;
                 //NSLog(@"Touch previous is (%f, %f)", self.previousPoint.x, self.previousPoint.y);
-                //NSLog(@"Touch move is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+                NSLog(@"Touch move is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
                 
                 CGPoint mid1 = midPoint(self.previousPoint, self.previousPreviousPoint);
                 CGPoint mid2 = midPoint(self.currentPoint, self.previousPoint);
@@ -159,6 +181,16 @@
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
                 
+                // to represent the finger movement, create a new path segment,
+                // a quadratic bezier path from mid1 to mid2, using previous as a control point
+                CGMutablePathRef subpath = CGPathCreateMutable();
+                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
+                CGPathAddQuadCurveToPoint(subpath, NULL,
+                                          self.previousPoint.x, self.previousPoint.y,
+                                          mid2.x, mid2.y);
+                CGPathAddPath(mMutablePath, NULL, subpath);
+                CGPathRelease(subpath);
+
                 
                 [self setNeedsDisplay];
             }
@@ -203,8 +235,18 @@
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
                 
+                // to represent the finger movement, create a new path segment,
+                // a quadratic bezier path from mid1 to mid2, using previous as a control point
+                CGMutablePathRef subpath = CGPathCreateMutable();
+                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
+                CGPathAddQuadCurveToPoint(subpath, NULL,
+                                          self.previousPoint.x, self.previousPoint.y,
+                                          mid2.x, mid2.y);
+                CGPathAddPath(mMutablePath, NULL, subpath);
+                CGPathRelease(subpath);
+                
                 [self setNeedsDisplay];
-                [self endPathAndCreateLayer];
+                NSLog(@"new layer created");
             }
         }
         NSLog(@"Touch end");
@@ -228,6 +270,8 @@
     mPath = [UIBezierPath bezierPath];
     mPath.lineWidth = _brushWidth;
     mPath.lineCapStyle = kCGLineCapRound;
+    
+    mMutablePath = CGPathCreateMutable();
 }
 
 - (void) endPathAndCreateLayer
@@ -235,21 +279,37 @@
     [mPath moveToPoint:self.currentPoint];
     lastTouch = self.currentPoint;
     NSLog(@"Last location is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
-    CAShapeLayer *line = [CAShapeLayer layer];
+//    CAShapeLayer *line = [CAShapeLayer layer];
+//    
+//    line.path = mPath.CGPath;
+//    line.fillColor = nil;
+//    line.lineWidth = _brushWidth;
+//    line.opacity = 1;
+//    line.strokeColor = _brushColor.CGColor;
+//    line.lineCap = kCALineCapRound;
+//    line.shouldRasterize = YES;
+//    line.rasterizationScale = self.contentScaleFactor;
+//    [self.layer insertSublayer:line below:self.layer];
+//    [mLayerArray addObject: line];
+//
+//    CAShapeLayer *line = [CAShapeLayer layer];
+//    
+//    line.path = mMutablePath;
+//    line.fillColor = nil;
+//    line.lineWidth = _brushWidth;
+//    line.opacity = 1;
+//    line.strokeColor = _brushColor.CGColor;
+//    line.lineCap = kCALineCapRound;
+//    line.shouldRasterize = YES;
+//    line.rasterizationScale = self.contentScaleFactor;
+//    [self.layer insertSublayer:line below:self.layer];
+//    [mLayerArray addObject: line];
     
-    line.path = mPath.CGPath;
-    line.fillColor = nil;
-    line.lineWidth = _brushWidth;
-    line.opacity = 1;
-    line.strokeColor = _brushColor.CGColor;
-    line.lineCap = kCALineCapRound;
-    line.shouldRasterize = YES;
-    line.rasterizationScale = self.contentScaleFactor;
-    [self.layer insertSublayer:line below:self.layer];
     
-    [mPathArray addObject: mPath];
+//    [mPathArray addObject: mPath];
     
     mPath = nil;
+    CFRelease(mMutablePath);
 }
 
 CGPoint midPoint(CGPoint p1, CGPoint p2) {

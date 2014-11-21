@@ -63,8 +63,8 @@
     [_versionLabel setText:[[WacomManager getManager] getSDKVersion]];
     [[TouchManager GetTouchManager] setHandedness:eh_Right];
     [[TouchManager GetTouchManager] setTouchRejectionEnabled:YES];
-    [[TouchManager GetTouchManager] setTimingOffset:45000];
-    NSLog(@"%d",[[TouchManager GetTouchManager] timingOffset]);
+    //[[TouchManager GetTouchManager] setTimingOffset:300];
+    //NSLog(@"%d",[[TouchManager GetTouchManager] timingOffset]);
 }
 
 
