@@ -22,26 +22,11 @@
     NSMutableArray *mPathArray;
     NSMutableArray *mLayerArray;
     UIBezierPath  *mPath;
-    CGMutablePathRef mMutablePath;
+//    CGMutablePathRef mMutablePath;
     
     CGPoint lastTouch;
 }
 
-
-//- (id)initWithCoder:(NSCoder *)aDecoder {
-//    self = [super initWithCoder:aDecoder];
-//
-//    if (self) {
-//        // NOTE: do not change the backgroundColor here, so it can be set in IB.
-//        mPath = CGPathCreateMutable();
-//        _brushWidth = DEFAULT_WIDTH;
-//        _brushColor = DEFAULT_COLOR;
-//        _empty = YES;
-//        mPathArray = [[NSMutableArray alloc] init];
-//    }
-//
-//    return self;
-//}
 
 - (id) initWithFrame:(CGRect)frame withBrushColor: (UIColor *)brushColor withBrushWidth: (CGFloat) brushWidth
 {
@@ -77,6 +62,23 @@
     return self;
 }
 
+- (void) createNewPath
+{
+    mPath = [UIBezierPath bezierPath];
+    mPath.lineWidth = _brushWidth;
+    mPath.lineCapStyle = kCGLineCapRound;
+    [self setNeedsDisplay];
+    //    mMutablePath = CGPathCreateMutable();
+    //
+    //    CGContextRef context = UIGraphicsGetCurrentContext();
+    //    CGContextAddPath(context, mMutablePath);
+    //    CGContextSetLineCap(context, kCGLineCapRound);
+    //    CGContextSetLineWidth(context, _brushWidth);
+    //    CGContextSetStrokeColorWithColor(context, _brushColor.CGColor);
+    //
+    //    CGContextStrokePath(context);
+}
+
 - (void) setHover:(BOOL)inHoverMode
 {
     mHoverMode = inHoverMode;
@@ -95,6 +97,8 @@
 
 - (void) erase
 {
+    if (mPath != nil) [self endPathAndCreateLayer];
+    
     for (CAShapeLayer *stroke in mLayerArray)
     {
         if (stroke){
@@ -102,6 +106,7 @@
         }
     }
     [mLayerArray removeAllObjects];
+    [self setNeedsDisplay];
 }
 
 - (void) drawRect:(CGRect)rect{
@@ -148,9 +153,9 @@
         NSLog(@"mPaht is nil");
         [self createNewPath];
     }
-    if (mMutablePath == nil){
-        mMutablePath = CGPathCreateMutable();
-    }
+//    if (mMutablePath == nil){
+//        [self createNewPath];
+//    }
     @try
     {
         CGPoint current, previous;
@@ -180,16 +185,16 @@
                 
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
-                
+
                 // to represent the finger movement, create a new path segment,
                 // a quadratic bezier path from mid1 to mid2, using previous as a control point
-                CGMutablePathRef subpath = CGPathCreateMutable();
-                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
-                CGPathAddQuadCurveToPoint(subpath, NULL,
-                                          self.previousPoint.x, self.previousPoint.y,
-                                          mid2.x, mid2.y);
-                CGPathAddPath(mMutablePath, NULL, subpath);
-                CGPathRelease(subpath);
+//                CGMutablePathRef subpath = CGPathCreateMutable();
+//                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
+//                CGPathAddQuadCurveToPoint(subpath, NULL,
+//                                          self.previousPoint.x, self.previousPoint.y,
+//                                          mid2.x, mid2.y);
+//                CGPathAddPath(mMutablePath, NULL, subpath);
+//                CGPathRelease(subpath);
 
                 
                 [self setNeedsDisplay];
@@ -237,16 +242,15 @@
                 
                 // to represent the finger movement, create a new path segment,
                 // a quadratic bezier path from mid1 to mid2, using previous as a control point
-                CGMutablePathRef subpath = CGPathCreateMutable();
-                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
-                CGPathAddQuadCurveToPoint(subpath, NULL,
-                                          self.previousPoint.x, self.previousPoint.y,
-                                          mid2.x, mid2.y);
-                CGPathAddPath(mMutablePath, NULL, subpath);
-                CGPathRelease(subpath);
+//                CGMutablePathRef subpath = CGPathCreateMutable();
+//                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
+//                CGPathAddQuadCurveToPoint(subpath, NULL,
+//                                          self.previousPoint.x, self.previousPoint.y,
+//                                          mid2.x, mid2.y);
+//                CGPathAddPath(mMutablePath, NULL, subpath);
+//                CGPathRelease(subpath);
                 
                 [self setNeedsDisplay];
-                NSLog(@"new layer created");
             }
         }
         NSLog(@"Touch end");
@@ -265,33 +269,24 @@
     [[TouchManager GetTouchManager] removeTouches:touches knownTouches:[event touchesForView:self] view:self];
 }
 
-- (void) createNewPath
-{
-    mPath = [UIBezierPath bezierPath];
-    mPath.lineWidth = _brushWidth;
-    mPath.lineCapStyle = kCGLineCapRound;
-    
-    mMutablePath = CGPathCreateMutable();
-}
-
 - (void) endPathAndCreateLayer
 {
     [mPath moveToPoint:self.currentPoint];
     lastTouch = self.currentPoint;
     NSLog(@"Last location is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
-//    CAShapeLayer *line = [CAShapeLayer layer];
-//    
-//    line.path = mPath.CGPath;
-//    line.fillColor = nil;
-//    line.lineWidth = _brushWidth;
-//    line.opacity = 1;
-//    line.strokeColor = _brushColor.CGColor;
-//    line.lineCap = kCALineCapRound;
-//    line.shouldRasterize = YES;
-//    line.rasterizationScale = self.contentScaleFactor;
-//    [self.layer insertSublayer:line below:self.layer];
-//    [mLayerArray addObject: line];
-//
+    CAShapeLayer *line = [CAShapeLayer layer];
+    
+    line.path = mPath.CGPath;
+    line.fillColor = nil;
+    line.lineWidth = _brushWidth;
+    line.opacity = 1;
+    line.strokeColor = _brushColor.CGColor;
+    line.lineCap = kCALineCapRound;
+    line.shouldRasterize = YES;
+    line.rasterizationScale = self.contentScaleFactor;
+    [self.layer insertSublayer:line above: mLayerArray.lastObject];
+    [mLayerArray addObject: line];
+
 //    CAShapeLayer *line = [CAShapeLayer layer];
 //    
 //    line.path = mMutablePath;
@@ -306,10 +301,11 @@
 //    [mLayerArray addObject: line];
     
     
-//    [mPathArray addObject: mPath];
+    [mPathArray addObject: mPath];
     
     mPath = nil;
-    CFRelease(mMutablePath);
+//    CFRelease(mMutablePath);
+//    mMutablePath = nil;
 }
 
 CGPoint midPoint(CGPoint p1, CGPoint p2) {

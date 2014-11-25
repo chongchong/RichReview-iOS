@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D798632D1A2529EA00C313FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D798632C1A2529EA00C313FA /* QuartzCore.framework */; };
+		D79863301A252A1E00C313FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D798632F1A252A1E00C313FA /* Foundation.framework */; };
+		D79863321A252A2C00C313FA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D79863311A252A2C00C313FA /* CoreBluetooth.framework */; };
+		D79863341A252A4E00C313FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D79863331A252A4E00C313FA /* CoreGraphics.framework */; };
 		D7B23D0A1A1BE78400053112 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B23D091A1BE78400053112 /* main.m */; };
 		D7B23D0D1A1BE78400053112 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B23D0C1A1BE78400053112 /* AppDelegate.m */; };
 		D7B23D101A1BE78400053112 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B23D0F1A1BE78400053112 /* ViewController.m */; };
@@ -29,6 +33,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D798632C1A2529EA00C313FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D798632F1A252A1E00C313FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D79863311A252A2C00C313FA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		D79863331A252A4E00C313FA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D7B23D041A1BE78400053112 /* RichReview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RichReview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B23D081A1BE78400053112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7B23D091A1BE78400053112 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -53,6 +61,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D79863341A252A4E00C313FA /* CoreGraphics.framework in Frameworks */,
+				D79863321A252A2C00C313FA /* CoreBluetooth.framework in Frameworks */,
+				D79863301A252A1E00C313FA /* Foundation.framework in Frameworks */,
+				D798632D1A2529EA00C313FA /* QuartzCore.framework in Frameworks */,
 				D7B23D311A1BED1800053112 /* WacomDevice.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -67,13 +79,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D798632E1A2529FE00C313FA /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				D79863331A252A4E00C313FA /* CoreGraphics.framework */,
+				D79863311A252A2C00C313FA /* CoreBluetooth.framework */,
+				D798632F1A252A1E00C313FA /* Foundation.framework */,
+				D798632C1A2529EA00C313FA /* QuartzCore.framework */,
+				D7B23D301A1BED1800053112 /* WacomDevice.framework */,
+			);
+			name = Framework;
+			sourceTree = "<group>";
+		};
 		D7B23CFB1A1BE78400053112 = {
 			isa = PBXGroup;
 			children = (
-				D7B23D301A1BED1800053112 /* WacomDevice.framework */,
 				D7B23D061A1BE78400053112 /* RichReview */,
 				D7B23D201A1BE78400053112 /* RichReviewTests */,
 				D7B23D051A1BE78400053112 /* Products */,
+				D798632E1A2529FE00C313FA /* Framework */,
 			);
 			sourceTree = "<group>";
 		};
