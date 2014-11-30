@@ -7,6 +7,7 @@
 //
 
 #import "DrawingView.h"
+#import "MyBezierPath.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation DrawingView
@@ -21,7 +22,8 @@
     
     NSMutableArray *mPathArray;
     NSMutableArray *mLayerArray;
-    UIBezierPath  *mPath;
+    MyBezierPath  *mPath;
+    NSMutableArray *mPathPoints;
 //    CGMutablePathRef mMutablePath;
     
     CGPoint lastTouch;
@@ -64,9 +66,7 @@
 
 - (void) createNewPath
 {
-    mPath = [UIBezierPath bezierPath];
-    mPath.lineWidth = _brushWidth;
-    mPath.lineCapStyle = kCGLineCapRound;
+    mPath = [[MyBezierPath alloc] initWithLineWidth: _brushWidth];
     [self setNeedsDisplay];
     //    mMutablePath = CGPathCreateMutable();
     //
@@ -109,9 +109,37 @@
     [self setNeedsDisplay];
 }
 
+- (void) undoLastStroke
+{
+    if (mPath != nil) [self endPathAndCreateLayer];
+    CAShapeLayer *stroke = mLayerArray.lastObject;
+    
+    if (stroke)
+    {
+        [stroke removeFromSuperlayer];
+        [mLayerArray removeObject:stroke];
+        [self setNeedsDisplay];
+        [mPathArray removeLastObject];
+    }
+}
+
+- (void) replayLastStroke
+{
+    if (mPath != nil) [self endPathAndCreateLayer];
+    MyBezierPath *lastPath = mPathArray.lastObject;
+//    UIBezierPath *replayStroke = [UIBezierPath bezierPath];
+    if (lastPath)
+    {
+//        for (CGPoint *point in [lastPath getPoints])
+//        {
+//            [replayStroke moveToPoint:*point];
+//        }
+    }
+}
+
 - (void) drawRect:(CGRect)rect{
     [self.brushColor setStroke];
-    [mPath stroke];
+    [mPath.bezierPath stroke];
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -276,7 +304,7 @@
     NSLog(@"Last location is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
     CAShapeLayer *line = [CAShapeLayer layer];
     
-    line.path = mPath.CGPath;
+    line.path = mPath.bezierPath.CGPath;
     line.fillColor = nil;
     line.lineWidth = _brushWidth;
     line.opacity = 1;

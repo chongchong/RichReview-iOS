@@ -30,16 +30,19 @@
 - (id) initWithFrame:(CGRect)frame withBrushColor: (UIColor *)brushColor withBrushWidth: (CGFloat) brushWidth;
 
 /// a callback method for the Wacom SDK that provides pressure data among other things.
--(void)stylusEvent:(WacomStylusEvent *)stylusEvent;
+- (void) stylusEvent:(WacomStylusEvent *)stylusEvent;
 
 /// Set hover mode
--(void)setHover:(BOOL)inHoverMode;
--(void)flipHover;
+- (void) setHover:(BOOL)inHoverMode;
+- (void) flipHover;
 
 /// clears the screen.
--(void)erase;
+- (void) erase;
+
+- (void) undoLastStroke;
 
 - (void) endPathAndCreateLayer;
 
+- (void) replayLastStroke;
 
 @end

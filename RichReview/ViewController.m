@@ -141,6 +141,8 @@
             // Clears the screen
             [_dV erase];
             break;
+        case 3:
+            [_dV undoLastStroke];
         default:
             break;
     };

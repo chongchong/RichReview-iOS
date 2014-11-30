@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BAD645C21A2817D2008F4319 /* MyBezierPath.m in Sources */ = {isa = PBXBuildFile; fileRef = BAD645C11A2817D2008F4319 /* MyBezierPath.m */; };
 		D798632D1A2529EA00C313FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D798632C1A2529EA00C313FA /* QuartzCore.framework */; };
 		D79863301A252A1E00C313FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D798632F1A252A1E00C313FA /* Foundation.framework */; };
 		D79863321A252A2C00C313FA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D79863311A252A2C00C313FA /* CoreBluetooth.framework */; };
@@ -33,6 +34,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BAD645C01A2817D2008F4319 /* MyBezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyBezierPath.h; sourceTree = "<group>"; };
+		BAD645C11A2817D2008F4319 /* MyBezierPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyBezierPath.m; sourceTree = "<group>"; };
 		D798632C1A2529EA00C313FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D798632F1A252A1E00C313FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D79863311A252A2C00C313FA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
@@ -79,7 +82,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D798632E1A2529FE00C313FA /* Framework */ = {
+		D798632E1A2529FE00C313FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				D79863331A252A4E00C313FA /* CoreGraphics.framework */,
@@ -88,7 +91,7 @@
 				D798632C1A2529EA00C313FA /* QuartzCore.framework */,
 				D7B23D301A1BED1800053112 /* WacomDevice.framework */,
 			);
-			name = Framework;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		D7B23CFB1A1BE78400053112 = {
@@ -97,7 +100,7 @@
 				D7B23D061A1BE78400053112 /* RichReview */,
 				D7B23D201A1BE78400053112 /* RichReviewTests */,
 				D7B23D051A1BE78400053112 /* Products */,
-				D798632E1A2529FE00C313FA /* Framework */,
+				D798632E1A2529FE00C313FA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -121,6 +124,8 @@
 				D7B23D331A1BEDB000053112 /* DrawingView.m */,
 				D7B23D2D1A1BECBF00053112 /* DiscoveryPopoverViewController.h */,
 				D7B23D2E1A1BECBF00053112 /* DiscoveryPopoverViewController.m */,
+				BAD645C01A2817D2008F4319 /* MyBezierPath.h */,
+				BAD645C11A2817D2008F4319 /* MyBezierPath.m */,
 				D7B23D111A1BE78400053112 /* Main.storyboard */,
 				D7B23D141A1BE78400053112 /* Images.xcassets */,
 				D7B23D071A1BE78400053112 /* Supporting Files */,
@@ -255,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7B23D2F1A1BECBF00053112 /* DiscoveryPopoverViewController.m in Sources */,
+				BAD645C21A2817D2008F4319 /* MyBezierPath.m in Sources */,
 				D7B23D101A1BE78400053112 /* ViewController.m in Sources */,
 				D7B23D0D1A1BE78400053112 /* AppDelegate.m in Sources */,
 				D7B23D341A1BEDB000053112 /* DrawingView.m in Sources */,
