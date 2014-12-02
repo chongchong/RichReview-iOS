@@ -10,12 +10,13 @@
 
 @interface MyBezierPath  : NSObject
 
-@property (nonatomic, assign) UIBezierPath *bezierPath;
+@property (nonatomic, strong) UIBezierPath *bezierPath;
 
 - (id) initWithLineWidth: (CGFloat) lineWidth;
 - (void) setLineWidth: (CGFloat) lineWidth;
 - (void) moveToPoint:(CGPoint)point;
 - (void) addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint;
+- (void) stroke;
 
 - (NSMutableArray *) getPoints;
 

@@ -198,6 +198,12 @@
 }
 
 
+// For prototype debugging
+- (IBAction) FlipPressureMode:(UIButton *)sender
+{
+    [_dV flipPressureMode];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Function:deviceDiscovered
 // Notes: just add the device to the discovered table. demonstrates signal strength
@@ -257,5 +263,6 @@
             break;
     }
 }
+
 
 @end

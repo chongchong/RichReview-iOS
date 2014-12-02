@@ -15,11 +15,15 @@
 
 - (id) initWithLineWidth: (CGFloat) lineWidth
 {
-    self.bezierPath = [UIBezierPath bezierPath];
-    self.bezierPath.lineCapStyle = kCGLineCapRound;
-    self.bezierPath.lineWidth = lineWidth;
+    self = [super init];
     
-    pointsArray = [[NSMutableArray alloc] init];
+    if (self)
+    {
+        _bezierPath = [[UIBezierPath bezierPath] copy];
+        _bezierPath.lineCapStyle = kCGLineCapRound;
+        _bezierPath.lineWidth = lineWidth;
+        pointsArray = [[NSMutableArray alloc] init];
+    }
     
     return self;
 }
@@ -27,7 +31,7 @@
 - (void) moveToPoint:(CGPoint)point
 {
     [pointsArray addObject: [NSValue valueWithCGPoint:point]];
-    [_bezierPath moveToPoint:point];
+    [self.bezierPath moveToPoint:point];
 }
 
 - (void) addQuadCurveToPoint:(CGPoint)endPoint controlPoint:(CGPoint)controlPoint
@@ -44,6 +48,11 @@
 - (NSMutableArray *) getPoints
 {
     return pointsArray;
+}
+
+- (void) stroke
+{
+    [_bezierPath stroke];
 }
 
 @end

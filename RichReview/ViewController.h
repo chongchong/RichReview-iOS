@@ -41,4 +41,5 @@
 //WacomStylusEventCallback
 ///notification method for when a new stylus event is ready.
 -(void)stylusEvent:(WacomStylusEvent *)stylusEvent;
+
 @end

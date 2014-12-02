@@ -24,9 +24,12 @@
     NSMutableArray *mLayerArray;
     MyBezierPath  *mPath;
     NSMutableArray *mPathPoints;
-//    CGMutablePathRef mMutablePath;
+    //    CGMutablePathRef mMutablePath;
     
     CGPoint lastTouch;
+    
+    //For prototype debugging purpose
+    BOOL pressureMode;
 }
 
 
@@ -41,6 +44,7 @@
         mPathArray = [[NSMutableArray alloc]init];
         
         mLayerArray = [[NSMutableArray alloc] init];
+        [self createNewPath];
     }
     return self;
     
@@ -60,6 +64,7 @@
         mPathArray = [[NSMutableArray alloc]init];
         
         mLayerArray = [[NSMutableArray alloc] init];
+        [self createNewPath];
     }
     return self;
 }
@@ -77,6 +82,28 @@
     //    CGContextSetStrokeColorWithColor(context, _brushColor.CGColor);
     //
     //    CGContextStrokePath(context);
+}
+
+- (void) flipPressureMode
+{
+    pressureMode = !pressureMode;
+}
+
+- (void) detectHover
+{
+    if (!pressureMode) return;
+    NSLog(@"current pressue is %f", mCurrentPressure);
+    if (mCurrentPressure < PRESSURE_BENCHMARK)
+    {
+        if (!mHoverMode)
+        {
+            [self setHover: true];
+        }
+    }
+    else if (mHoverMode)
+    {
+        [self setHover: false];
+    }
 }
 
 - (void) setHover:(BOOL)inHoverMode
@@ -112,12 +139,12 @@
 - (void) undoLastStroke
 {
     if (mPath != nil) [self endPathAndCreateLayer];
-    CAShapeLayer *stroke = mLayerArray.lastObject;
+    CAShapeLayer *lastPathlayer = mLayerArray.lastObject;
     
-    if (stroke)
+    if (lastPathlayer)
     {
-        [stroke removeFromSuperlayer];
-        [mLayerArray removeObject:stroke];
+        [lastPathlayer removeFromSuperlayer];
+        [mLayerArray removeObject:lastPathlayer];
         [self setNeedsDisplay];
         [mPathArray removeLastObject];
     }
@@ -126,48 +153,63 @@
 - (void) replayLastStroke
 {
     if (mPath != nil) [self endPathAndCreateLayer];
+    CAShapeLayer *lastPathlayer = mLayerArray.lastObject;
+    if (lastPathlayer)
+    {
+        [lastPathlayer removeFromSuperlayer];
+    }
     MyBezierPath *lastPath = mPathArray.lastObject;
-//    UIBezierPath *replayStroke = [UIBezierPath bezierPath];
+    UIBezierPath *replayStroke = [UIBezierPath bezierPath];
     if (lastPath)
     {
-//        for (CGPoint *point in [lastPath getPoints])
-//        {
-//            [replayStroke moveToPoint:*point];
-//        }
+        for (NSValue *value in [lastPath getPoints])
+        {
+            CGPoint *point;
+            [value getValue:point];
+            [replayStroke moveToPoint:*point];
+            [self setNeedsDisplay];
+        }
     }
 }
 
 - (void) drawRect:(CGRect)rect{
     [self.brushColor setStroke];
-    [mPath.bezierPath stroke];
+    [mPath stroke];
 }
 
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    mCurrentPressure = mPreviousPressure = mPressure;
     self.currentPoint = self.previousPoint = self.previousPreviousPoint = DUMMY_CGPOINT;
     [[TouchManager GetTouchManager] addTouches:touches knownTouches:[event touchesForView:self] view:self];
     NSLog(@"Touch Began");
     @try
     {
-        //        NSArray *theTrackedTouches = [[TouchManager GetTouchManager] getTouches];
-        //        if ([theTrackedTouches count]==0)
-        //        {
-        UITouch *touch = [touches anyObject];
-        self.currentPoint = [touch locationInView:self];
-        NSLog(@"Dummy touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
-        self.previousPoint = [touch previousLocationInView:self];
-        self.previousPreviousPoint = self.previousPoint;
-        //        }
-        //        else
-        //            for(TrackedTouch *touch in theTrackedTouches)
-        //            {
-        //                self.currentPoint = touch.currentLocation;
-        //                NSLog(@"Touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
-        //                self.previousPoint = touch.previousLocation;
-        //                self.previousPreviousPoint = touch.previousLocation;
-        //            }
+        NSArray *theTrackedTouches = [[TouchManager GetTouchManager] getTrackedTouches];
+        
+        for(TrackedTouch *touch in theTrackedTouches)
+        {
+            self.currentPoint = touch.currentLocation;
+            NSLog(@"Touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+            self.previousPoint = touch.previousLocation;
+            self.previousPreviousPoint = touch.previousLocation;
+            mCurrentPressure = mPressure;
+            
+            [self detectHover];
+            
+        }
         // [self touchesMoved:touches withEvent:event];
+        
+        if (CGPointEqualToPoint(self.currentPoint, DUMMY_CGPOINT))
+        {
+            UITouch *touch = [touches anyObject];
+            self.currentPoint = [touch locationInView:self];
+            NSLog(@"Dummy touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+            self.previousPoint = [touch previousLocationInView:self];
+            self.previousPreviousPoint = self.previousPoint;
+        }
     }
+    
     @catch (NSException *exception)
     {
         NSLog(@"Uh-oh");
@@ -181,9 +223,9 @@
         NSLog(@"mPaht is nil");
         [self createNewPath];
     }
-//    if (mMutablePath == nil){
-//        [self createNewPath];
-//    }
+    //    if (mMutablePath == nil){
+    //        [self createNewPath];
+    //    }
     @try
     {
         CGPoint current, previous;
@@ -213,19 +255,28 @@
                 
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
-
+                
                 // to represent the finger movement, create a new path segment,
                 // a quadratic bezier path from mid1 to mid2, using previous as a control point
-//                CGMutablePathRef subpath = CGPathCreateMutable();
-//                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
-//                CGPathAddQuadCurveToPoint(subpath, NULL,
-//                                          self.previousPoint.x, self.previousPoint.y,
-//                                          mid2.x, mid2.y);
-//                CGPathAddPath(mMutablePath, NULL, subpath);
-//                CGPathRelease(subpath);
-
+                //                CGMutablePathRef subpath = CGPathCreateMutable();
+                //                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
+                //                CGPathAddQuadCurveToPoint(subpath, NULL,
+                //                                          self.previousPoint.x, self.previousPoint.y,
+                //                                          mid2.x, mid2.y);
+                //                CGPathAddPath(mMutablePath, NULL, subpath);
+                //                CGPathRelease(subpath);
+                
                 
                 [self setNeedsDisplay];
+                
+                if (mPressure != mCurrentPressure)
+                {
+                    mCurrentPressure = mPressure;
+                }
+                mPreviousPressure = mCurrentPressure;
+                mCurrentPressure = mPressure;
+                
+                [self detectHover];
             }
         }
         
@@ -270,15 +321,24 @@
                 
                 // to represent the finger movement, create a new path segment,
                 // a quadratic bezier path from mid1 to mid2, using previous as a control point
-//                CGMutablePathRef subpath = CGPathCreateMutable();
-//                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
-//                CGPathAddQuadCurveToPoint(subpath, NULL,
-//                                          self.previousPoint.x, self.previousPoint.y,
-//                                          mid2.x, mid2.y);
-//                CGPathAddPath(mMutablePath, NULL, subpath);
-//                CGPathRelease(subpath);
+                //                CGMutablePathRef subpath = CGPathCreateMutable();
+                //                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
+                //                CGPathAddQuadCurveToPoint(subpath, NULL,
+                //                                          self.previousPoint.x, self.previousPoint.y,
+                //                                          mid2.x, mid2.y);
+                //                CGPathAddPath(mMutablePath, NULL, subpath);
+                //                CGPathRelease(subpath);
                 
                 [self setNeedsDisplay];
+                
+                if (mPressure != mCurrentPressure)
+                {
+                    mCurrentPressure = mPressure;
+                }
+                mPreviousPressure = mCurrentPressure;
+                mCurrentPressure = mPressure;
+                
+                [self detectHover];
             }
         }
         NSLog(@"Touch end");
@@ -314,26 +374,26 @@
     line.rasterizationScale = self.contentScaleFactor;
     [self.layer insertSublayer:line above: mLayerArray.lastObject];
     [mLayerArray addObject: line];
-
-//    CAShapeLayer *line = [CAShapeLayer layer];
-//    
-//    line.path = mMutablePath;
-//    line.fillColor = nil;
-//    line.lineWidth = _brushWidth;
-//    line.opacity = 1;
-//    line.strokeColor = _brushColor.CGColor;
-//    line.lineCap = kCALineCapRound;
-//    line.shouldRasterize = YES;
-//    line.rasterizationScale = self.contentScaleFactor;
-//    [self.layer insertSublayer:line below:self.layer];
-//    [mLayerArray addObject: line];
+    
+    //    CAShapeLayer *line = [CAShapeLayer layer];
+    //
+    //    line.path = mMutablePath;
+    //    line.fillColor = nil;
+    //    line.lineWidth = _brushWidth;
+    //    line.opacity = 1;
+    //    line.strokeColor = _brushColor.CGColor;
+    //    line.lineCap = kCALineCapRound;
+    //    line.shouldRasterize = YES;
+    //    line.rasterizationScale = self.contentScaleFactor;
+    //    [self.layer insertSublayer:line below:self.layer];
+    //    [mLayerArray addObject: line];
     
     
     [mPathArray addObject: mPath];
     
     mPath = nil;
-//    CFRelease(mMutablePath);
-//    mMutablePath = nil;
+    //    CFRelease(mMutablePath);
+    //    mMutablePath = nil;
 }
 
 CGPoint midPoint(CGPoint p1, CGPoint p2) {

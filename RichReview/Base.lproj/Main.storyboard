@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
@@ -22,11 +22,13 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ur8-Ss-GeT"/>
+                                    <action selector="ToggleHoverOff:" destination="BYZ-38-t0r" eventType="touchDragOutside" id="15g-PC-xH0"/>
+                                    <action selector="ToggleHoverOff:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hNf-Ea-75W"/>
+                                    <action selector="ToggleHoverOn:" destination="BYZ-38-t0r" eventType="touchDown" id="hiA-dx-YoK"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" momentary="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7u-Kk-4sE">
-                                <rect key="frame" x="185" y="29" width="223" height="29"/>
+                                <rect key="frame" x="124" y="29" width="249" height="29"/>
                                 <segments>
                                     <segment title="Stylus"/>
                                     <segment title="Touch"/>
@@ -37,6 +39,15 @@
                                     <action selector="SegControlPerformAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="jF8-If-hqa"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nUO-ji-s5j">
+                                <rect key="frame" x="482" y="27" width="68" height="30"/>
+                                <state key="normal" title="Pressure">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="FlipPressureMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Yy-z1-qzt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>

@@ -13,8 +13,10 @@
 #define HOVER_COLOR                 [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.5]
 #define DEFAULT_WIDTH               1.0f
 #define DEFAULT_BACKGROUND_COLOR    [UIColor whiteColor]
-#define HOVER_BRUSH_WIDTH            30.0f
+#define HOVER_BRUSH_WIDTH           30.0f
 #define DUMMY_CGPOINT               CGPointMake(-1,-1)
+#define PRESSURE_BENCHMARK          300
+#define DUMMY_PRESSURE              2000
 
 @interface DrawingView : UIView <WacomStylusEventCallback>
 
@@ -44,5 +46,9 @@
 - (void) endPathAndCreateLayer;
 
 - (void) replayLastStroke;
+
+- (void) detectHover;
+
+- (void) flipPressureMode;
 
 @end
