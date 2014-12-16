@@ -28,8 +28,6 @@
     
     CGPoint lastTouch;
     
-    //For prototype debugging purpose
-    BOOL pressureMode;
 }
 
 
@@ -45,6 +43,7 @@
         
         mLayerArray = [[NSMutableArray alloc] init];
         [self createNewPath];
+//        self.multipleTouchEnabled = YES;
     }
     return self;
     
@@ -65,6 +64,7 @@
         
         mLayerArray = [[NSMutableArray alloc] init];
         [self createNewPath];
+//        self.multipleTouchEnabled = YES;
     }
     return self;
 }
@@ -72,7 +72,7 @@
 - (void) createNewPath
 {
     mPath = [[MyBezierPath alloc] initWithLineWidth: _brushWidth];
-    [self setNeedsDisplay];
+//    [self setNeedsDisplay];
     //    mMutablePath = CGPathCreateMutable();
     //
     //    CGContextRef context = UIGraphicsGetCurrentContext();
@@ -86,12 +86,12 @@
 
 - (void) flipPressureMode
 {
-    pressureMode = !pressureMode;
+    _pressureMode = !_pressureMode;
 }
 
 - (void) detectHover
 {
-    if (!pressureMode) return;
+    if (!_pressureMode) return;
     NSLog(@"current pressue is %f", mCurrentPressure);
     if (mCurrentPressure < PRESSURE_BENCHMARK)
     {
@@ -203,10 +203,14 @@
         if (CGPointEqualToPoint(self.currentPoint, DUMMY_CGPOINT))
         {
             UITouch *touch = [touches anyObject];
+            
             self.currentPoint = [touch locationInView:self];
             NSLog(@"Dummy touch began is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
             self.previousPoint = [touch previousLocationInView:self];
             self.previousPreviousPoint = self.previousPoint;
+            
+            CGFloat touchSize = [[touch valueForKey:@"pathMajorRadius"] floatValue];
+            NSLog(@"touch size is %.2f", touchSize);
         }
     }
     
@@ -231,6 +235,11 @@
         CGPoint current, previous;
         [[TouchManager GetTouchManager] moveTouches:touches  knownTouches:[event touchesForView:self] view:self];
         NSArray *theTrackedTouches = [[TouchManager GetTouchManager] getTrackedTouches];
+        
+        UITouch *touch = [touches anyObject];
+        CGFloat touchSize = [[touch valueForKey:@"pathMajorRadius"] floatValue];
+        NSLog(@"touch size is %.2f", touchSize);
+        
         for(TrackedTouch *touch in theTrackedTouches)
         {
             if([touches containsObject:touch.associatedTouch])
@@ -266,8 +275,9 @@
                 //                CGPathAddPath(mMutablePath, NULL, subpath);
                 //                CGPathRelease(subpath);
                 
-                
-                [self setNeedsDisplay];
+                CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
+                CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
+                [self setNeedsDisplayInRect:drawBox];
                 
                 if (mPressure != mCurrentPressure)
                 {
@@ -329,8 +339,11 @@
                 //                CGPathAddPath(mMutablePath, NULL, subpath);
                 //                CGPathRelease(subpath);
                 
-                [self setNeedsDisplay];
                 
+                CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
+                CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
+                [self setNeedsDisplayInRect:drawBox];
+                [self endPathAndCreateLayer];
                 if (mPressure != mCurrentPressure)
                 {
                     mCurrentPressure = mPressure;
@@ -355,6 +368,7 @@
 {
     NSLog(@"Touch cancelled");
     [[TouchManager GetTouchManager] removeTouches:touches knownTouches:[event touchesForView:self] view:self];
+    
 }
 
 - (void) endPathAndCreateLayer

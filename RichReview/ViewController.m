@@ -201,6 +201,16 @@
 // For prototype debugging
 - (IBAction) FlipPressureMode:(UIButton *)sender
 {
+    NSString *message   = nil;
+    NSString *title     = @"Pressure sensitive";
+    if(_dV.pressureMode)
+        message = @"You have turned OFF Pressure Sensitive.";
+    else
+        message = @"You have turned ON Pressure Sensitive.";
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alertView show];
+
     [_dV flipPressureMode];
 }
 

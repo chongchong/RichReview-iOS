@@ -28,6 +28,8 @@
 @property (nonatomic,assign) CGPoint previousPoint;
 @property (nonatomic,assign) CGPoint previousPreviousPoint;
 
+@property(nonatomic,assign)  BOOL pressureMode;
+
 
 - (id) initWithFrame:(CGRect)frame withBrushColor: (UIColor *)brushColor withBrushWidth: (CGFloat) brushWidth;
 
