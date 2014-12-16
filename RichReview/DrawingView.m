@@ -244,7 +244,14 @@
         {
             if([touches containsObject:touch.associatedTouch])
             {
-                
+                if (touch.isStylus && mHoverMode)
+                {
+                    [self setHover:false];
+                }
+                else if (touch.isStylus==NO && mHoverMode==NO)
+                {
+                    [self setHover:true];
+                }
                 // update points: previousPrevious -> mid1 -> previous -> mid2 -> current
                 current = touch.currentTouchLocation;
                 //current.y = self.bounds.size.height - touch.currentLocation.y;
@@ -376,6 +383,9 @@
     [mPath moveToPoint:self.currentPoint];
     lastTouch = self.currentPoint;
     NSLog(@"Last location is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+    CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
+    CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
+    [self setNeedsDisplayInRect:drawBox];
     CAShapeLayer *line = [CAShapeLayer layer];
     
     line.path = mPath.bezierPath.CGPath;
