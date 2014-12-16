@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GLKit/GLKView.h"
+#import "CanvasView.h"
 #import "DrawingView.h"
 #import <WacomDevice/WacomDeviceFramework.h>
 @interface ViewController : UIViewController <UIPopoverControllerDelegate, WacomDiscoveryCallback, WacomStylusEventCallback>
@@ -20,6 +21,7 @@
 
 //@property (retain, nonatomic) IBOutlet GLKView *glview;
 
+@property (retain, nonatomic) IBOutlet CanvasView *cV;
 @property (retain, nonatomic) IBOutlet DrawingView *dV;
 
 //WacomDiscoveryCallback

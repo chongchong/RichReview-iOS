@@ -30,9 +30,6 @@
 
 @property(nonatomic,assign)  BOOL pressureMode;
 
-
-- (id) initWithFrame:(CGRect)frame withBrushColor: (UIColor *)brushColor withBrushWidth: (CGFloat) brushWidth;
-
 /// a callback method for the Wacom SDK that provides pressure data among other things.
 - (void) stylusEvent:(WacomStylusEvent *)stylusEvent;
 

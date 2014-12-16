@@ -139,10 +139,10 @@
             [self toggleTouchRejection];
         case 2:
             // Clears the screen
-            [_dV erase];
+            [_cV erase];
             break;
         case 3:
-            [_dV undoLastStroke];
+            [_cV undoLastStroke];
         default:
             break;
     };
@@ -181,7 +181,7 @@
 // Notes: When holding the button, the pen drawing will be recognized as hovering.
 - (IBAction)ToggleHoverOn:(UIButton *)sender
 {
-    [_dV setHover:true];
+    [_cV setHover:true];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,12 +189,12 @@
 // Notes: When releasing the button, the pen drawing will be recognized as drawing.
 - (IBAction)ToggleHoverOff:(UIButton *)sender
 {
-    [_dV setHover:false];
+    [_cV setHover:false];
 }
 
 - (IBAction)FlipHoverMode:(id)sender
 {
-    [_dV flipHover];
+    [_cV flipHover];
 }
 
 
@@ -203,7 +203,7 @@
 {
     NSString *message   = nil;
     NSString *title     = @"Pressure sensitive";
-    if(_dV.pressureMode)
+    if([_cV getPressureMode])
         message = @"You have turned OFF Pressure Sensitive.";
     else
         message = @"You have turned ON Pressure Sensitive.";
@@ -211,7 +211,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
 
-    [_dV flipPressureMode];
+    [_cV flipPressureMode];
 }
 
 ////////////////////////////////////////////////////////////////////////////////

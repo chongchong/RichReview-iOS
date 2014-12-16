@@ -12,6 +12,7 @@
 		D79863301A252A1E00C313FA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D798632F1A252A1E00C313FA /* Foundation.framework */; };
 		D79863321A252A2C00C313FA /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D79863311A252A2C00C313FA /* CoreBluetooth.framework */; };
 		D79863341A252A4E00C313FA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D79863331A252A4E00C313FA /* CoreGraphics.framework */; };
+		D7A665741A3FBC0600EEF5BB /* CanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7A665731A3FBC0600EEF5BB /* CanvasView.m */; };
 		D7B23D0A1A1BE78400053112 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B23D091A1BE78400053112 /* main.m */; };
 		D7B23D0D1A1BE78400053112 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B23D0C1A1BE78400053112 /* AppDelegate.m */; };
 		D7B23D101A1BE78400053112 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B23D0F1A1BE78400053112 /* ViewController.m */; };
@@ -40,6 +41,8 @@
 		D798632F1A252A1E00C313FA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D79863311A252A2C00C313FA /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		D79863331A252A4E00C313FA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D7A665721A3FBC0600EEF5BB /* CanvasView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CanvasView.h; sourceTree = "<group>"; };
+		D7A665731A3FBC0600EEF5BB /* CanvasView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanvasView.m; sourceTree = "<group>"; };
 		D7B23D041A1BE78400053112 /* RichReview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RichReview.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B23D081A1BE78400053112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D7B23D091A1BE78400053112 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -116,6 +119,8 @@
 		D7B23D061A1BE78400053112 /* RichReview */ = {
 			isa = PBXGroup;
 			children = (
+				D7A665721A3FBC0600EEF5BB /* CanvasView.h */,
+				D7A665731A3FBC0600EEF5BB /* CanvasView.m */,
 				D7B23D0B1A1BE78400053112 /* AppDelegate.h */,
 				D7B23D0C1A1BE78400053112 /* AppDelegate.m */,
 				D7B23D0E1A1BE78400053112 /* ViewController.h */,
@@ -263,6 +268,7 @@
 				BAD645C21A2817D2008F4319 /* MyBezierPath.m in Sources */,
 				D7B23D101A1BE78400053112 /* ViewController.m in Sources */,
 				D7B23D0D1A1BE78400053112 /* AppDelegate.m in Sources */,
+				D7A665741A3FBC0600EEF5BB /* CanvasView.m in Sources */,
 				D7B23D341A1BEDB000053112 /* DrawingView.m in Sources */,
 				D7B23D0A1A1BE78400053112 /* main.m in Sources */,
 			);

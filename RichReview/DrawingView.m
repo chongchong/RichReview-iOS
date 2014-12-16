@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 dev. All rights reserved.
 //
 
+#import"CanvasView.h"
 #import "DrawingView.h"
 #import "MyBezierPath.h"
 #import <QuartzCore/QuartzCore.h>
@@ -27,34 +28,12 @@
     //    CGMutablePathRef mMutablePath;
     
     CGPoint lastTouch;
-    
 }
 
-
-- (id) initWithFrame:(CGRect)frame withBrushColor: (UIColor *)brushColor withBrushWidth: (CGFloat) brushWidth
+- (id) init
 {
-    self = [super initWithFrame:frame];
+    self = [super init];
     if (self){
-        _brushColor = brushColor;
-        _brushWidth = brushWidth;
-        self.backgroundColor = [UIColor clearColor];
-        
-        mPathArray = [[NSMutableArray alloc]init];
-        
-        mLayerArray = [[NSMutableArray alloc] init];
-        [self createNewPath];
-//        self.multipleTouchEnabled = YES;
-    }
-    return self;
-    
-}
-
-- (id) initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self){
-        
-        [[WacomManager getManager] registerForNotifications:self];
         
         _brushColor = DEFAULT_COLOR;
         _brushWidth = DEFAULT_WIDTH;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -12,7 +12,7 @@
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="DrawingView">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="CanvasView">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -22,9 +22,9 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="ToggleHoverOff:" destination="BYZ-38-t0r" eventType="touchDragOutside" id="15g-PC-xH0"/>
-                                    <action selector="ToggleHoverOff:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hNf-Ea-75W"/>
-                                    <action selector="ToggleHoverOn:" destination="BYZ-38-t0r" eventType="touchDown" id="hiA-dx-YoK"/>
+                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="HvT-Wn-xaK"/>
+                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="i3Q-UI-ATB"/>
+                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchDown" id="zx3-3p-jAf"/>
                                 </connections>
                             </button>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" momentary="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7u-Kk-4sE">
@@ -36,7 +36,7 @@
                                     <segment title="Undo"/>
                                 </segments>
                                 <connections>
-                                    <action selector="SegControlPerformAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="jF8-If-hqa"/>
+                                    <action selector="SegControlPerformAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="QJP-eJ-C3p"/>
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nUO-ji-s5j">
@@ -45,16 +45,21 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="FlipPressureMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Yy-z1-qzt"/>
+                                    <action selector="FlipPressureMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RhZ-fd-A36"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cig-iM-jYL" customClass="DrawingView">
+                                <rect key="frame" x="0.0" y="65" width="600" height="491"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="dV" destination="8bC-Xf-vdC" id="2ia-FK-9c3"/>
+                        <outlet property="cV" destination="8bC-Xf-vdC" id="DtR-MS-dp0"/>
+                        <outlet property="dV" destination="Cig-iM-jYL" id="xSD-lg-r0o"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
