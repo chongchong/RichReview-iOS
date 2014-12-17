@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 dev. All rights reserved.
 //
 
-#import"CanvasView.h"
 #import "DrawingView.h"
 #import "MyBezierPath.h"
 #import <QuartzCore/QuartzCore.h>
@@ -30,9 +29,9 @@
     CGPoint lastTouch;
 }
 
-- (id) init
+- (id) initWithFrame:(CGRect)frame
 {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self){
         
         _brushColor = DEFAULT_COLOR;
@@ -43,7 +42,7 @@
         
         mLayerArray = [[NSMutableArray alloc] init];
         [self createNewPath];
-//        self.multipleTouchEnabled = YES;
+        self.multipleTouchEnabled = YES;
     }
     return self;
 }
@@ -51,7 +50,7 @@
 - (void) createNewPath
 {
     mPath = [[MyBezierPath alloc] initWithLineWidth: _brushWidth];
-//    [self setNeedsDisplay];
+    //    [self setNeedsDisplay];
     //    mMutablePath = CGPathCreateMutable();
     //
     //    CGContextRef context = UIGraphicsGetCurrentContext();
@@ -66,6 +65,11 @@
 - (void) flipPressureMode
 {
     _pressureMode = !_pressureMode;
+}
+
+- (BOOL) getPressureMode
+{
+    return _pressureMode;
 }
 
 - (void) detectHover
@@ -202,13 +206,6 @@
 
 - (void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (mPath == nil){
-        NSLog(@"mPaht is nil");
-        [self createNewPath];
-    }
-    //    if (mMutablePath == nil){
-    //        [self createNewPath];
-    //    }
     @try
     {
         CGPoint current, previous;
@@ -230,6 +227,10 @@
                 else if (touch.isStylus==NO && mHoverMode==NO)
                 {
                     [self setHover:true];
+                }
+                if (mPath == nil){
+                    NSLog(@"mPaht is nil");
+                    [self createNewPath];
                 }
                 // update points: previousPrevious -> mid1 -> previous -> mid2 -> current
                 current = touch.currentTouchLocation;
@@ -287,6 +288,9 @@
 {
     @try
     {
+        NSLog(@"Begin Touch end");
+        if (mPath == nil) return;
+        NSLog(@"mPath not nil");
         CGPoint current, previous;
         [[TouchManager GetTouchManager] moveTouches:touches  knownTouches:[event touchesForView:self] view:self];
         NSArray *theTrackedTouches = [[TouchManager GetTouchManager] getTrackedTouches];
@@ -354,7 +358,11 @@
 {
     NSLog(@"Touch cancelled");
     [[TouchManager GetTouchManager] removeTouches:touches knownTouches:[event touchesForView:self] view:self];
-    
+    if (mPath != nil)
+    {
+        [self endPathAndCreateLayer];
+        [self undoLastStroke];
+    }
 }
 
 - (void) endPathAndCreateLayer

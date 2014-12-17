@@ -49,5 +49,6 @@
 - (void) detectHover;
 
 - (void) flipPressureMode;
+- (BOOL) getPressureMode;
 
 @end

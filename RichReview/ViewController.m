@@ -62,7 +62,39 @@
     [_toolBar setTitle:@"" forSegmentAtIndex:BATTERY_PERCENTAGE_SEGMENT];
     [_versionLabel setText:[[WacomManager getManager] getSDKVersion]];
     [[TouchManager GetTouchManager] setHandedness:eh_Right];
-    [[TouchManager GetTouchManager] setTouchRejectionEnabled:YES];
+    [[TouchManager GetTouchManager] setTouchRejectionEnabled:NO];
+    
+    NSString* imagePath = [ [ NSBundle mainBundle] pathForResource:@"000" ofType:@"png"];
+    UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:img];
+    CGRect frame = imageView.frame;
+    float imgFactor = frame.size.height / frame.size.width;
+    frame.size.width = [[UIScreen mainScreen] bounds].size.width;
+    frame.size.height = frame.size.width * imgFactor;
+    imageView.frame = frame;
+    _scrollView.contentSize = frame.size ;
+    
+    _dV = [[DrawingView alloc] initWithFrame:frame];
+    _dV.backgroundColor = [UIColor clearColor];
+    [_scrollView addSubview:_dV];
+    [_scrollView sendSubviewToBack:_dV ];
+
+    [_scrollView addSubview:imageView ];
+    [_scrollView sendSubviewToBack:imageView ];
+    
+    for (UIGestureRecognizer *gestureRecognizer in _scrollView.gestureRecognizers) {
+        if ([gestureRecognizer  isKindOfClass:[UIPanGestureRecognizer class]]) {
+            UIPanGestureRecognizer *panGR = (UIPanGestureRecognizer *) gestureRecognizer;
+            panGR.minimumNumberOfTouches = 2;
+            panGR.maximumNumberOfTouches = 2;
+            panGR.cancelsTouchesInView = YES;
+        }
+        else
+        {
+            gestureRecognizer.delaysTouchesBegan = NO;
+        }
+    }
     //[[TouchManager GetTouchManager] setTimingOffset:300];
     //NSLog(@"%d",[[TouchManager GetTouchManager] timingOffset]);
 }
@@ -139,10 +171,10 @@
             [self toggleTouchRejection];
         case 2:
             // Clears the screen
-            [_cV erase];
+            [_dV erase];
             break;
         case 3:
-            [_cV undoLastStroke];
+            [_dV undoLastStroke];
         default:
             break;
     };
@@ -181,7 +213,7 @@
 // Notes: When holding the button, the pen drawing will be recognized as hovering.
 - (IBAction)ToggleHoverOn:(UIButton *)sender
 {
-    [_cV setHover:true];
+    [_dV  setHover:true];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,12 +221,12 @@
 // Notes: When releasing the button, the pen drawing will be recognized as drawing.
 - (IBAction)ToggleHoverOff:(UIButton *)sender
 {
-    [_cV setHover:false];
+    [_dV setHover:false];
 }
 
 - (IBAction)FlipHoverMode:(id)sender
 {
-    [_cV flipHover];
+    [_dV  flipHover];
 }
 
 
@@ -203,7 +235,7 @@
 {
     NSString *message   = nil;
     NSString *title     = @"Pressure sensitive";
-    if([_cV getPressureMode])
+    if([_dV getPressureMode])
         message = @"You have turned OFF Pressure Sensitive.";
     else
         message = @"You have turned ON Pressure Sensitive.";
@@ -211,7 +243,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alertView show];
 
-    [_cV flipPressureMode];
+    [_dV  flipPressureMode];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
