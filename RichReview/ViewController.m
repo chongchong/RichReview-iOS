@@ -73,7 +73,7 @@
     frame.size.width = [[UIScreen mainScreen] bounds].size.width;
     frame.size.height = frame.size.width * imgFactor;
     imageView.frame = frame;
-    _scrollView.contentSize = frame.size ;
+    _scrollView.contentSize = frame.size;
     
     _dV = [[DrawingView alloc] initWithFrame:frame];
     _dV.backgroundColor = [UIColor clearColor];

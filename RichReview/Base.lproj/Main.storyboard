@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -12,23 +13,18 @@
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="UIScrollView">
+                    <view key="view" clipsSubviews="YES" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yBm-E5-d3e">
-                                <rect key="frame" x="22" y="28" width="41" height="30"/>
-                                <state key="normal" title="Hover">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lkr-6R-KgY">
+                                <rect key="frame" x="0.0" y="65" width="768" height="940"/>
                                 <connections>
-                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="HvT-Wn-xaK"/>
-                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="i3Q-UI-ATB"/>
-                                    <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchDown" id="zx3-3p-jAf"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="DXS-V2-76l"/>
                                 </connections>
-                            </button>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" momentary="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7u-Kk-4sE">
-                                <rect key="frame" x="124" y="29" width="249" height="29"/>
+                            </scrollView>
+                            <segmentedControl opaque="NO" contentMode="center" misplaced="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" segmentControlStyle="bar" selectedSegmentIndex="0" momentary="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7u-Kk-4sE">
+                                <rect key="frame" x="191" y="28" width="249" height="29"/>
                                 <segments>
                                     <segment title="Stylus"/>
                                     <segment title="Touch"/>
@@ -39,28 +35,44 @@
                                     <action selector="SegControlPerformAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="QJP-eJ-C3p"/>
                                 </connections>
                             </segmentedControl>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nUO-ji-s5j">
-                                <rect key="frame" x="482" y="27" width="68" height="30"/>
-                                <state key="normal" title="Pressure">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="FlipPressureMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RhZ-fd-A36"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="delegate" destination="BYZ-38-t0r" id="Xah-jI-5NV"/>
-                        </connections>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="H7u-Kk-4sE" secondAttribute="trailing" constant="200" id="BJZ-3F-ZmZ"/>
+                            <constraint firstItem="lkr-6R-KgY" firstAttribute="top" secondItem="H7u-Kk-4sE" secondAttribute="bottom" constant="9" id="L05-s3-7vc"/>
+                            <constraint firstItem="H7u-Kk-4sE" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="ddH-oX-hSU"/>
+                            <constraint firstItem="H7u-Kk-4sE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="200" id="pEU-J4-czb"/>
+                        </constraints>
                     </view>
                     <toolbarItems/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="scrollView" destination="8bC-Xf-vdC" id="UED-1t-LQb"/>
+                        <outlet property="scrollView" destination="lkr-6R-KgY" id="hx2-SV-dxp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yBm-E5-d3e">
+                    <rect key="frame" x="0.0" y="0.0" width="41" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Hover">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="HvT-Wn-xaK"/>
+                        <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="i3Q-UI-ATB"/>
+                        <action selector="FlipHoverMode:" destination="BYZ-38-t0r" eventType="touchDown" id="zx3-3p-jAf"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="nUO-ji-s5j">
+                    <rect key="frame" x="0.0" y="0.0" width="68" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Pressure">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="FlipPressureMode:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RhZ-fd-A36"/>
+                    </connections>
+                </button>
             </objects>
         </scene>
     </scenes>
