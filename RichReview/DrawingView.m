@@ -22,9 +22,8 @@
     
     NSMutableArray *mPathArray;
     NSMutableArray *mLayerArray;
-    MyBezierPath  *mPath;
+    MyBezierPath  *mPath; // TODO(cw474): maybe MutablePath will have better performance?? 
     NSMutableArray *mPathPoints;
-    //    CGMutablePathRef mMutablePath;
     
     CGPoint lastTouch;
 }
@@ -181,7 +180,7 @@
             [self detectHover];
             
         }
-        // [self touchesMoved:touches withEvent:event];
+        [self touchesMoved:touches withEvent:event];
         
         if (CGPointEqualToPoint(self.currentPoint, DUMMY_CGPOINT))
         {
@@ -222,6 +221,11 @@
             {
                 if (touch.isStylus && mHoverMode)
                 {
+                    if (mPath != nil) // to get rid of the beginning inaccuracy for stylus
+                    {
+                        [self endPathAndCreateLayer];
+                        [self undoLastStroke];
+                    }
                     [self setHover:false];
                 }
                 else if (touch.isStylus==NO && mHoverMode==NO)
@@ -234,16 +238,11 @@
                 }
                 // update points: previousPrevious -> mid1 -> previous -> mid2 -> current
                 current = touch.currentTouchLocation;
-                //current.y = self.bounds.size.height - touch.currentLocation.y;
                 previous = touch.previousTouchLocation;
-                //previous.y = self.bounds.size.height - touch.previousLocation.y;
                 
-                //if (CGPointEqualToPoint(self.previousPoint, DUMMY_CGPOINT)) self.previousPreviousPoint = previous;
-                //else
                 self.previousPreviousPoint = self.previousPoint;
                 self.previousPoint = previous;
                 self.currentPoint = current;
-                //NSLog(@"Touch previous is (%f, %f)", self.previousPoint.x, self.previousPoint.y);
                 NSLog(@"Touch move is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
                 
                 CGPoint mid1 = midPoint(self.previousPoint, self.previousPreviousPoint);
@@ -301,9 +300,9 @@
                 
                 // update points: previousPrevious -> mid1 -> previous -> mid2 -> current
                 current = touch.currentTouchLocation;
-                //current.y = self.bounds.size.height - touch.currentLocation.y;
+                // current.y = self.bounds.size.height - touch.currentLocation.y;
                 previous = touch.previousTouchLocation;
-                //previous.y = self.bounds.size.height - touch.previousLocation.y;
+                // previous.y = self.bounds.size.height - touch.previousLocation.y;
                 
                 self.previousPreviousPoint = self.previousPoint;
                 self.previousPoint = previous;
@@ -318,17 +317,6 @@
                 
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
-                
-                // to represent the finger movement, create a new path segment,
-                // a quadratic bezier path from mid1 to mid2, using previous as a control point
-                //                CGMutablePathRef subpath = CGPathCreateMutable();
-                //                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
-                //                CGPathAddQuadCurveToPoint(subpath, NULL,
-                //                                          self.previousPoint.x, self.previousPoint.y,
-                //                                          mid2.x, mid2.y);
-                //                CGPathAddPath(mMutablePath, NULL, subpath);
-                //                CGPathRelease(subpath);
-                
                 
                 CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
                 CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
@@ -358,6 +346,7 @@
 {
     NSLog(@"Touch cancelled");
     [[TouchManager GetTouchManager] removeTouches:touches knownTouches:[event touchesForView:self] view:self];
+    // undo the current stroke if this touch gets cancelled.
     if (mPath != nil)
     {
         [self endPathAndCreateLayer];
@@ -386,25 +375,10 @@
     [self.layer insertSublayer:line above: mLayerArray.lastObject];
     [mLayerArray addObject: line];
     
-    //    CAShapeLayer *line = [CAShapeLayer layer];
-    //
-    //    line.path = mMutablePath;
-    //    line.fillColor = nil;
-    //    line.lineWidth = _brushWidth;
-    //    line.opacity = 1;
-    //    line.strokeColor = _brushColor.CGColor;
-    //    line.lineCap = kCALineCapRound;
-    //    line.shouldRasterize = YES;
-    //    line.rasterizationScale = self.contentScaleFactor;
-    //    [self.layer insertSublayer:line below:self.layer];
-    //    [mLayerArray addObject: line];
-    
-    
     [mPathArray addObject: mPath];
     
     mPath = nil;
-    //    CFRelease(mMutablePath);
-    //    mMutablePath = nil;
+    
 }
 
 CGPoint midPoint(CGPoint p1, CGPoint p2) {
@@ -423,7 +397,6 @@ CGPoint midPoint(CGPoint p1, CGPoint p2) {
             break;
         case eStylusEventType_ButtonReleased:
         {
-            //NSString *title     = @"Button released";
             NSString *message = nil;
             switch ([stylusEvent getButton])
             {
@@ -441,9 +414,6 @@ CGPoint midPoint(CGPoint p1, CGPoint p2) {
                 default:
                     break;
             }
-            //			UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
-            //			[alertView show];
-            
             
         }
             break;
@@ -468,8 +438,6 @@ CGPoint midPoint(CGPoint p1, CGPoint p2) {
                 default:
                     break;
             }
-            //			UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
-            //			[alertView show];
             
             
         }

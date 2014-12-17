@@ -169,6 +169,7 @@
         case 1:
             // Toggles touch rejection on and off.
             [self toggleTouchRejection];
+            break;
         case 2:
             // Clears the screen
             [_dV erase];
