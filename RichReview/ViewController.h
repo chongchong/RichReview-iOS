@@ -17,9 +17,6 @@
 - (IBAction)showPrivacyMessage:(UIButton *)sender;
 @property (retain, nonatomic) IBOutlet UISegmentedControl *HandednessControl;
 @property (retain, nonatomic) IBOutlet UILabel *versionLabel;
-
-//@property (retain, nonatomic) IBOutlet GLKView *glview;
-
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
 @property (retain, nonatomic) IBOutlet DrawingView *dV;
 

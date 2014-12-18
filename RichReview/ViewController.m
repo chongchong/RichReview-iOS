@@ -64,9 +64,9 @@
     [[TouchManager GetTouchManager] setHandedness:eh_Right];
     [[TouchManager GetTouchManager] setTouchRejectionEnabled:NO];
     
+    // sample pdf image
     NSString* imagePath = [ [ NSBundle mainBundle] pathForResource:@"000" ofType:@"png"];
     UIImage *img = [UIImage imageWithContentsOfFile:imagePath];
-    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:img];
     CGRect frame = imageView.frame;
     float imgFactor = frame.size.height / frame.size.width;

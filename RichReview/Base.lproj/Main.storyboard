@@ -23,7 +23,7 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="DXS-V2-76l"/>
                                 </connections>
                             </scrollView>
-                            <segmentedControl opaque="NO" contentMode="center" misplaced="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" segmentControlStyle="bar" selectedSegmentIndex="0" momentary="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7u-Kk-4sE">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" segmentControlStyle="bar" selectedSegmentIndex="0" momentary="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H7u-Kk-4sE">
                                 <rect key="frame" x="191" y="28" width="249" height="29"/>
                                 <segments>
                                     <segment title="Stylus"/>

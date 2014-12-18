@@ -49,16 +49,6 @@
 - (void) createNewPath
 {
     mPath = [[MyBezierPath alloc] initWithLineWidth: _brushWidth];
-    //    [self setNeedsDisplay];
-    //    mMutablePath = CGPathCreateMutable();
-    //
-    //    CGContextRef context = UIGraphicsGetCurrentContext();
-    //    CGContextAddPath(context, mMutablePath);
-    //    CGContextSetLineCap(context, kCGLineCapRound);
-    //    CGContextSetLineWidth(context, _brushWidth);
-    //    CGContextSetStrokeColorWithColor(context, _brushColor.CGColor);
-    //
-    //    CGContextStrokePath(context);
 }
 
 - (void) flipPressureMode
@@ -162,6 +152,7 @@
 - (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     mCurrentPressure = mPreviousPressure = mPressure;
+
     self.currentPoint = self.previousPoint = self.previousPreviousPoint = DUMMY_CGPOINT;
     [[TouchManager GetTouchManager] addTouches:touches knownTouches:[event touchesForView:self] view:self];
     NSLog(@"Touch Began");
@@ -219,6 +210,8 @@
         {
             if([touches containsObject:touch.associatedTouch])
             {
+                // Wacom stylus cannot tell whether a touch comes from the stylus or not.
+                // So we have to put the detection logic in touchesMoved
                 if (touch.isStylus && mHoverMode)
                 {
                     if (mPath != nil) // to get rid of the beginning inaccuracy for stylus
@@ -228,8 +221,10 @@
                     }
                     [self setHover:false];
                 }
-                else if (touch.isStylus==NO && mHoverMode==NO)
+                else if (touch.isStylus==NO && mHoverMode==NO &&[[mPath getPoints] count]>3)
                 {
+                    [self endPathAndCreateLayer];
+                    [self undoLastStroke];
                     [self setHover:true];
                 }
                 if (mPath == nil){
@@ -250,17 +245,8 @@
                 
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
-                
-                // to represent the finger movement, create a new path segment,
-                // a quadratic bezier path from mid1 to mid2, using previous as a control point
-                //                CGMutablePathRef subpath = CGPathCreateMutable();
-                //                CGPathMoveToPoint(subpath, NULL, mid1.x, mid1.y);
-                //                CGPathAddQuadCurveToPoint(subpath, NULL,
-                //                                          self.previousPoint.x, self.previousPoint.y,
-                //                                          mid2.x, mid2.y);
-                //                CGPathAddPath(mMutablePath, NULL, subpath);
-                //                CGPathRelease(subpath);
-                
+
+                // set the bounding box for current segment so we don't have to redraw everything
                 CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
                 CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
                 [self setNeedsDisplayInRect:drawBox];
@@ -318,6 +304,7 @@
                 [mPath moveToPoint:mid1];
                 [mPath addQuadCurveToPoint:mid2 controlPoint:self.previousPoint];
                 
+                // set the bounding box for current segment so we don't have to redraw everything
                 CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
                 CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
                 [self setNeedsDisplayInRect:drawBox];
@@ -359,11 +346,13 @@
     [mPath moveToPoint:self.currentPoint];
     lastTouch = self.currentPoint;
     NSLog(@"Last location is (%f, %f)", self.currentPoint.x, self.currentPoint.y);
+    // set the bounding box for current segment so we don't have to redraw everything
     CGRect bounds = CGPathGetBoundingBox(CGPathCreateCopy(mPath.bezierPath.CGPath));
     CGRect drawBox = CGRectInset(bounds, -2.0 * mPath.bezierPath.lineWidth, -2.0 * mPath.bezierPath.lineWidth);
     [self setNeedsDisplayInRect:drawBox];
-    CAShapeLayer *line = [CAShapeLayer layer];
     
+    // create a CAShapeLayer for this stroke
+    CAShapeLayer *line = [CAShapeLayer layer];
     line.path = mPath.bezierPath.CGPath;
     line.fillColor = nil;
     line.lineWidth = _brushWidth;
@@ -381,6 +370,7 @@
     
 }
 
+// a helper method for BezierPath drawing
 CGPoint midPoint(CGPoint p1, CGPoint p2) {
     return CGPointMake((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5);
 }

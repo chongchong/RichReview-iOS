@@ -10,7 +10,7 @@
 #import <WacomDevice/WacomDeviceFramework.h>
 
 #define DEFAULT_COLOR               [UIColor blackColor]
-#define HOVER_COLOR                 [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.5]
+#define HOVER_COLOR                 [UIColor colorWithRed:0 green:0 blue:0.6 alpha:0.2]
 #define DEFAULT_WIDTH               1.0f
 #define DEFAULT_BACKGROUND_COLOR    [UIColor whiteColor]
 #define HOVER_BRUSH_WIDTH           30.0f
@@ -44,6 +44,7 @@
 
 - (void) endPathAndCreateLayer;
 
+// this one does not work yet.
 - (void) replayLastStroke;
 
 - (void) detectHover;
