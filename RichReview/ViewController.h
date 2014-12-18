@@ -18,6 +18,7 @@
 @property (retain, nonatomic) IBOutlet UISegmentedControl *HandednessControl;
 @property (retain, nonatomic) IBOutlet UILabel *versionLabel;
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, strong) IBOutlet UIView *contentView;
 @property (retain, nonatomic) IBOutlet DrawingView *dV;
 
 //WacomDiscoveryCallback

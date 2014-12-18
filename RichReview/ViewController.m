@@ -70,18 +70,23 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:img];
     CGRect frame = imageView.frame;
     float imgFactor = frame.size.height / frame.size.width;
-    frame.size.width = [[UIScreen mainScreen] bounds].size.width;
+    frame.size.width = [[UIScreen mainScreen] bounds].size.width - 40;
     frame.size.height = frame.size.width * imgFactor;
     imageView.frame = frame;
-    _scrollView.contentSize = frame.size;
+    _contentView = [[UIView alloc] init];
+    _contentView.frame = frame;
+    _scrollView.contentSize = _contentView.frame.size;
     
     _dV = [[DrawingView alloc] initWithFrame:frame];
     _dV.backgroundColor = [UIColor clearColor];
     [_scrollView addSubview:_dV];
-    [_scrollView sendSubviewToBack:_dV ];
+    [_scrollView sendSubviewToBack:_dV];
 
     [_scrollView addSubview:imageView ];
     [_scrollView sendSubviewToBack:imageView ];
+    
+    [_scrollView addSubview:_contentView ];
+    [_scrollView sendSubviewToBack:_contentView ];
     
     for (UIGestureRecognizer *gestureRecognizer in _scrollView.gestureRecognizers) {
         if ([gestureRecognizer  isKindOfClass:[UIPanGestureRecognizer class]]) {
