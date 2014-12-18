@@ -333,6 +333,7 @@
 {
     NSLog(@"Touch cancelled");
     [[TouchManager GetTouchManager] removeTouches:touches knownTouches:[event touchesForView:self] view:self];
+    
     // undo the current stroke if this touch gets cancelled.
     if (mPath != nil)
     {
