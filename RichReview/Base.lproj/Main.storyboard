@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkr-6R-KgY">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lkr-6R-KgY">
                                 <rect key="frame" x="0.0" y="65" width="768" height="940"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="DXS-V2-76l"/>
@@ -38,10 +38,14 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="lkr-6R-KgY" firstAttribute="top" secondItem="H7u-Kk-4sE" secondAttribute="bottom" constant="10" id="0PN-N9-QuE"/>
                             <constraint firstAttribute="trailingMargin" secondItem="H7u-Kk-4sE" secondAttribute="trailing" constant="200" id="BJZ-3F-ZmZ"/>
-                            <constraint firstItem="lkr-6R-KgY" firstAttribute="top" secondItem="H7u-Kk-4sE" secondAttribute="bottom" constant="9" id="L05-s3-7vc"/>
                             <constraint firstItem="H7u-Kk-4sE" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="ddH-oX-hSU"/>
+                            <constraint firstItem="lkr-6R-KgY" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="guq-g4-Ge0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lkr-6R-KgY" secondAttribute="trailing" id="kec-Xk-Nx7"/>
                             <constraint firstItem="H7u-Kk-4sE" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="200" id="pEU-J4-czb"/>
+                            <constraint firstItem="lkr-6R-KgY" firstAttribute="top" secondItem="H7u-Kk-4sE" secondAttribute="bottom" constant="10" id="qWl-88-hPE"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="lkr-6R-KgY" secondAttribute="bottom" constant="20" id="suo-9b-hFR"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
